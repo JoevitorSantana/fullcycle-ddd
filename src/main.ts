@@ -8,8 +8,8 @@ const address = new Address("Rua Mairiporã", 72, "19050570", "Presidente Pruden
 customer.Address = address;
 customer.activate();
 
-const item1 = new OrderItem("1", "item1", 10);
-const item2 = new OrderItem("2", "item2", 20);
+const item1 = new OrderItem("1", "item1", 10, "123", 2);
+const item2 = new OrderItem("2", "item2", 20, "123", 3);
 
 const order = new Order("1", "123", [item1, item2]);
 
