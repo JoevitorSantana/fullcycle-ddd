@@ -1,4 +1,4 @@
-import Product from "../entity/product";
+import Product from "../domain/entity/product";
 
 export default class ProductService {
     /* OBS: Lembrar que em prod não faz sentido isso, apenas para demonstração */
