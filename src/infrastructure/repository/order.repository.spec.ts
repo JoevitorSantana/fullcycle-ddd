@@ -65,6 +65,52 @@ describe("Order repository unit tests", () => {
         })
     });
 
+    it ("should update an order", async () => {
+        const customerRepository = new CustomerRepository();
+
+        const customer = new Customer("123", "John Doe");
+        const address = new Address("Street 1", 123, "ZIP", "City");
+        customer.changeAddress(address);
+        await customerRepository.create(customer);
+
+        const customer2 = new Customer("456", "Zé Joe");
+        const address2 = new Address("Street 2", 123, "ZIP", "City");
+        customer2.changeAddress(address2);
+        await customerRepository.create(customer2);
+
+        const productRepository = new ProductRepository();
+        const product = new Product("123", "Product 1", 100);
+        await productRepository.create(product);
+
+        const orderItem = new OrderItem("123", product.name, product.price, product.id, 1);
+
+        const orderRepository = new OrderRepository();
+        const order = new Order("123", "123", [orderItem]);
+        await orderRepository.create(order);
+
+        order.changeCustomer(customer2.id);
+
+        await orderRepository.update(order);
+
+        const orderResult = await OrderModel.findOne({ where: { id: order.id }, include: ["items"] });
+        
+        expect(orderResult?.toJSON()).toStrictEqual({
+            id: "123",
+            customer_id: "456",
+            total: order.total(),
+            items: [
+                {
+                    id: orderItem.id,
+                    order_id: order.id,
+                    name: product.name,
+                    product_id: product.id,
+                    quantity: orderItem.quantity,
+                    price: orderItem.price,
+                },
+            ]
+        });
+    });
+
     afterEach(async () => {
         await sequelize.close();
     });
