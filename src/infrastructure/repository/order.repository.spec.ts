@@ -111,6 +111,60 @@ describe("Order repository unit tests", () => {
         });
     });
 
+    it("Should be able to find an order", async () => {
+        const orderRepository = new OrderRepository();
+
+        const customerRepository = new CustomerRepository();
+
+        const customer = new Customer("123", "John Doe");
+        const address = new Address("Street 1", 123, "ZIP", "City");
+        customer.changeAddress(address);
+        await customerRepository.create(customer);
+
+        const productRepository = new ProductRepository();
+        const product = new Product("123", "Product 1", 100);
+        await productRepository.create(product);
+
+        const orderItem = new OrderItem("123", product.name, product.price, product.id, 1);
+
+        const order = new Order("123", customer.id, [orderItem]);
+
+        await orderRepository.create(order);
+
+        const orderResult = await orderRepository.find(order.id);
+
+        expect(order).toStrictEqual(orderResult);
+    });
+
+    it("Should be able to find all orders", async () => {
+        // Creating test customer
+        const customerRepository = new CustomerRepository();
+        const customer = new Customer("123", "John Doe");
+        const address = new Address("Street 1", 123, "ZIP", "City");
+        customer.changeAddress(address);
+        await customerRepository.create(customer);
+
+        // Creating test product
+        const productRepository = new ProductRepository();
+        const product = new Product("123", "Product 1", 100);
+        await productRepository.create(product);
+
+        // Creating test order
+        const orderRepository = new OrderRepository();
+        const orderItem = new OrderItem("123", product.name, product.price, product.id, 1);
+        const order = new Order("123", customer.id, [orderItem]);
+        await orderRepository.create(order);
+
+        // Creating second test order
+        const orderItem2 = new OrderItem("456", product.name, product.price, product.id, 2);
+        const order2 = new Order("456", customer.id, [orderItem2]);
+        await orderRepository.create(order2);
+
+        const foundOrders = await orderRepository.findAll();
+
+        expect(foundOrders).toEqual([order, order2]);
+    });
+
     afterEach(async () => {
         await sequelize.close();
     });
