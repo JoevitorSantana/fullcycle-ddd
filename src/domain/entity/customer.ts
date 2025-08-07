@@ -28,6 +28,10 @@ export default class Customer {
         return this._name;
     }
 
+    get address(): Address {
+        return this._address;
+    }
+
     /* nomenclatura pensando no negócio */
     /* possui comportamento similar ao set */
     changeName(name: string) {
@@ -59,5 +63,9 @@ export default class Customer {
 
     get rewardPoints(): number {
         return this._rewardPoints;
+    }
+
+    changeAddress(address: Address) {
+        this._address = address;
     }
 }
