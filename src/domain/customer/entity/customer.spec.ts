@@ -1,4 +1,4 @@
-import Address from "./address";
+import Address from "../value-objects/address";
 import Customer from "./customer";
 
 function newCustomer(id: string, name: string) {
